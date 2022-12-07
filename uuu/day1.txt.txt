@@ -93,3 +93,11 @@ cd C:\Users\Admin\Desktop\DDD_C#
 dotnet new sln -o lab1_unittest
 cd lab1_unittest
 dotnet new classlib -o PrimeService
+
+
+https://docs.nunit.org/articles/nunit/writing-tests/attributes/apartment.html
+
+dotnet test --filter PrimeTest1
+dotnet test --filter Prime.Service.Tests.PrimeTest1
+
+dotnet test --filter PrimeService.Tests.Tests
