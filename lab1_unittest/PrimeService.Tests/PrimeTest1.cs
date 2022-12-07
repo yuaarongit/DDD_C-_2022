@@ -6,10 +6,10 @@ public class PrimeTest1
 {
 
     private PrimeService __primeService = null!;
-    [SetUp]
+    [OneTimeSetUp]
     public void prepare()
     {
-        Console.WriteLine("初始化 PrimeService");
+        TestContext.Progress.WriteLine("初始化 PrimeService");
         __primeService = new PrimeService();
     }
     [Test]
