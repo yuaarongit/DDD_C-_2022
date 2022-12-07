@@ -9,6 +9,10 @@ public class PrimeService
         {
             return false;
         }
+        if (candidate == 2)
+        {
+            return false;
+        }
         throw new NotImplementedException("Not Yet");
     }
 }
