@@ -1,0 +1,95 @@
+1. install vscode
+2. install .netsdk
+3. install git
+
+https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-6.0.403-windows-x64-installer
+
+cmd
+dotnet --version
+dotnet -h
+dotnet list
+
+https://code.visualstudio.com/docs/?dv=win
+
+https://git-scm.com/
+https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
+after install git, restart your vscode
+re-open terminal
+git --version
+
+
+cmd
+code
+
+�梢枤�糓:
+ctrl+`
+
+
+��滨迂: REST Client
+霅睃ê̌蝣�: humao.rest-client
+��讛膩: REST Client for Visual Studio Code
+���𧋦: 0.25.1
+�䔄銵諹��: Huachao Mao
+VS Marketplace ����: https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+
+��滨迂: NuGet Reverse Package Search ("Add Package" support)
+霅睃ê̌蝣�: jesschadwick.nuget-reverse-package-search
+��讛膩: Adds reverse .NET package lookup support like the "Add Package" context menu  item in full Visual Studio
+���𧋦: 0.1.68
+�䔄銵諹��: Jess Chadwick
+VS Marketplace ����: https://marketplace.visualstudio.com/items?itemName=jesschadwick.nuget-reverse-package-search
+
+��滨迂: Git Graph
+霅睃ê̌蝣�: mhutchie.git-graph
+��讛膩: View a Git Graph of your repository, and perform Git actions from the graph.
+���𧋦: 1.30.0
+�䔄銵諹��: mhutchie
+VS Marketplace ����: https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph
+
+
+https://sqlitebrowser.org/
+https://download.sqlitebrowser.org/DB.Browser.for.SQLite-3.12.2-win64.msi
+
+
+
+
+https://www.figma.com/pricing/
+
+github.com
+
+Desktop
+make a directory DDD_C#
+open a cmd in this directory
+git init .
+
+https://git-scm.com/book/zh-tw/v2/%E9%96%8B%E5%A7%8B-%E5%88%9D%E6%AC%A1%E8%A8%AD%E5%AE%9A-Git
+
+
+git config --global user.name "YOUR_USERNAME"
+
+git config --global user.email "mark@uuu.com"
+
+
+code .
+
+.gitignore
+
+bin/
+obj/
+Migrations/
+
+
+撠���遣蝡�, ��惩��.gitignore
+
+git log
+git log --pretty=oneline
+
+
+ctrl+K,O
+
+
+cd C:\Users\Admin\Desktop\DDD_C#
+dotnet new sln -o lab1_unittest
+cd lab1_unittest
+dotnet new classlib -o PrimeService
