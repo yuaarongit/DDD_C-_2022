@@ -11,7 +11,7 @@ public class PrimeService
         }
         if (candidate == 2)
         {
-            return false;
+            return true;
         }
         throw new NotImplementedException("Not Yet");
     }
