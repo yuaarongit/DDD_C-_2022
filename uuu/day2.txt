@@ -37,4 +37,402 @@ https://localhost:7034/WeatherForecast
 
 rest_call 目錄
 
+
 weather_forecast.http
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+GET https://localhost:7034/WeatherForecast
+
+###
+
+GET http://localhost:5044/WeatherForecast
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@server = localhost
+@endpoint1 = WeatherForecast
+GET https://{{server}}:7034/{{endpoint1}}
+
+###
+
+GET http://{{server}}:5044/{{endpoint1}}
+
+使用Rest Client作api的測試呼叫
+
+cmd
+dotnet new console -o lab3_reverse_package_search
+code .\lab3_reverse_package_search\
+
+產生新專案lab3
+
+DI.cs
+namespace Lab3;
+public static class DependencyInjection {
+    
+}
+
+dotnet build
+
+namespace Lab3;
+public static class DependencyInjection {
+    public static IServiceCollection Application(this IServiceCollection services) {
+
+    }
+}
+
+
+ctrl+shift+P
+
+dotnet add . package Microsoft.Extensions.DependencyInjection.Abstractions
+
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Lab3;
+public static class DependencyInjection {
+    public static IServiceCollection Application(this IServiceCollection services) {
+        return services;
+    }
+}
+
+
+finish lab3
+
+cd ..
+dotnet new console -o lab4_ef_core
+code lab4_ef_core
+
+dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+
+dotnet build
+dotnet run
+
+
+創建專案增加Sqlite的EFCore
+
+
+Model目錄
+
+Blog.cs
+
+namespace Model;
+public class Blog
+{
+    public int BlogId { get; set; }
+    public string? Uri { get; set; }
+}
+
+dotnet build
+
+
+Post.cs
+
+alt+shift+F
+namespace Model;
+public class Post
+{
+    public int PostId { get; set; }
+    public string? Title { get; set; }
+    public string? Content { get; set; }
+}
+
+dotnet build
+dotnet run
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+dotnet tool install --global dotnet-ef
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+dotnet build
+
+增加entity framework的design
+
+
+BlogContext.cs
+
+using Microsoft.EntityFrameworkCore;
+
+namespace Model;
+public class BlogContext : DbContext
+{
+    public DbSet<Blog>? Blogs { get; set; }
+    public DbSet<Post>? Posts { get; set; }
+    public string DbPath { get; }
+    
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.EntityFrameworkCore;
+
+namespace Model;
+public class BlogContext : DbContext
+{
+    public BlogContext()
+    {
+    }
+
+    public DbSet<Blog>? Blogs { get; set; }
+    public DbSet<Post>? Posts { get; set; }
+    public string DbPath { get; }
+        
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.EntityFrameworkCore;
+
+namespace Model;
+public class BlogContext : DbContext
+{
+    public BlogContext()
+    {
+        var folder = Environment.SpecialFolder.LocalApplicationData;
+        var path = Environment.GetFolderPath(folder);
+        DbPath = System.IO.Path.Join(path, "lab4.db");
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite($"Data Source={DbPath}");
+
+    public DbSet<Blog>? Blogs { get; set; }
+    public DbSet<Post>? Posts { get; set; }
+    public string DbPath { get; }
+
+}
+
+
+using Microsoft.EntityFrameworkCore;
+
+namespace Model;
+public class BlogContext : DbContext
+{
+    public BlogContext()
+    {
+        var folder = Environment.SpecialFolder.LocalApplicationData;
+        var path = Environment.GetFolderPath(folder);
+        DbPath = System.IO.Path.Join(path, "lab4.db");
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite($"Data Source={DbPath}");
+
+    public DbSet<Blog>? Blogs { get; set; }
+    public DbSet<Post>? Posts { get; set; }
+    public string DbPath { get; }
+
+}
+
+
+dotnet ef migrations add InitialCreate
+
+dotnet ef database update
+
+C:\Users\Admin\AppData\Local\lab4.db
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Model;
+using var db = new BlogContext();
+Console.WriteLine($"資料庫的路徑是:{db.DbPath}");
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Model;
+using var db = new BlogContext();
+Console.WriteLine($"資料庫的路徑是:{db.DbPath}");
+
+db.Add(new Blog { Uri = "http://www.uuu.com.tw/" });
+db.Add(new Blog { Uri = "http://www.tibame.com/" });
+db.Add(new Blog { Uri = "http://hahow.in/" });
+db.SaveChanges();
+Console.WriteLine("將資料讀回");
+var blogs = db.Blogs.OrderBy(b => b.BlogId);
+foreach (var b in blogs)
+{
+    Console.WriteLine($"{b.BlogId},{b.Uri}");
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Model;
+using var db = new BlogContext();
+Console.WriteLine($"資料庫的路徑是:{db.DbPath}");
+
+db.Add(new Blog { Uri = "http://www.uuu.com.tw/" });
+db.Add(new Blog { Uri = "http://www.tibame.com/" });
+db.Add(new Blog { Uri = "http://hahow.in/" });
+db.SaveChanges();
+Console.WriteLine("將資料讀回");
+var blogs = db.Blogs!.OrderBy(b => b.BlogId);
+foreach (var b in blogs)
+{
+    Console.WriteLine($"{b.BlogId},{b.Uri}");
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+使用efcore
+
+
+Blog.cs
+
+namespace Model;
+public class Blog
+{
+    public int BlogId { get; set; }
+    public string? Uri { get; set; }
+    public List<Post> Posts { get; } = new();
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace Model;
+public class Post
+{
+    public int PostId { get; set; }
+    public string? Title { get; set; }
+    public string? Content { get; set; }
+    public int BlogId { get; set; }
+    public Blog Blog { get; set; }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dotnet ef migrations add addPost
+
+dotnet ef database update
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Program.cs
+
+using Model;
+using var db = new BlogContext();
+Console.WriteLine($"資料庫的路徑是:{db.DbPath}");
+
+// db.Add(new Blog { Uri = "http://www.uuu.com.tw/" });
+// db.Add(new Blog { Uri = "http://www.tibame.com/" });
+// db.Add(new Blog { Uri = "http://hahow.in/" });
+Console.WriteLine("修改一下資料");
+var blog = db.Blogs!.OrderBy(b => b.BlogId).Last();
+blog.Uri = "https://www.cwb.gov.tw";
+blog.Posts.Add(new Post { Title = "urgent", Content = "Type is coming" });
+blog.Posts.Add(new Post { Title = "urgent", Content = "Earthquake last night" });
+db.SaveChanges();
+
+Console.WriteLine("將資料讀回");
+var blogs = db.Blogs!.OrderBy(b => b.BlogId);
+foreach (var b in blogs)
+{
+    Console.WriteLine($"{b.BlogId},{b.Uri}");
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Model;
+using var db = new BlogContext();
+Console.WriteLine($"資料庫的路徑是:{db.DbPath}");
+
+// db.Add(new Blog { Uri = "http://www.uuu.com.tw/" });
+// db.Add(new Blog { Uri = "http://www.tibame.com/" });
+// db.Add(new Blog { Uri = "http://hahow.in/" });
+// Console.WriteLine("修改一下資料");
+// var blog = db.Blogs!.OrderBy(b => b.BlogId).Last();
+// blog.Uri = "https://www.cwb.gov.tw";
+// blog.Posts.Add(new Post { Title = "urgent", Content = "Type is coming" });
+// blog.Posts.Add(new Post { Title = "urgent", Content = "Earthquake last night" });
+// db.SaveChanges();
+
+Console.WriteLine("將資料讀回");
+var blogs = db.Blogs!.OrderBy(b => b.BlogId);
+foreach (var b in blogs)
+{
+    Console.WriteLine($"{b.BlogId},{b.Uri}");
+    foreach (var p in b.Posts)
+    {
+        Console.WriteLine($"..{p.Title}/{p.Content}");
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Post.cs
+
+namespace Model;
+public class Post
+{
+    public int PostId { get; set; }
+    public string? Title { get; set; }
+    public string? Content { get; set; }
+    public int BlogId { get; set; }
+    public Blog Blog { get; set; }=null!;
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Blog.cs
+
+namespace Model;
+public class Blog
+{
+    public int BlogId { get; set; }
+    public string? Uri { get; set; }
+    public List<Post> Posts { get; set; } = new();
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dotnet ef migrations add fixup
+dotnet ef database update
+
+dotnet run
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Model;
+using var db = new BlogContext();
+Console.WriteLine($"資料庫的路徑是:{db.DbPath}");
+
+// db.Add(new Blog { Uri = "http://www.uuu.com.tw/" });
+// db.Add(new Blog { Uri = "http://www.tibame.com/" });
+// db.Add(new Blog { Uri = "http://hahow.in/" });
+Console.WriteLine("修改一下資料");
+var blog = db.Blogs!.OrderBy(b => b.BlogId).Last();
+blog.Uri = "https://www.cwb.gov.tw";
+blog.Posts.Add(new Post { Title = "urgent", Content = "Type is coming" });
+blog.Posts.Add(new Post { Title = "urgent", Content = "Earthquake last night" });
+db.SaveChanges();
+
+Console.WriteLine("將資料讀回");
+var blogs = db.Blogs!.OrderBy(b => b.BlogId);
+foreach (var b in blogs)
+{
+    Console.WriteLine($"{b.BlogId},{b.Uri}");
+    foreach (var p in b.Posts)
+    {
+        Console.WriteLine($"..{p.Title}/{p.Content}");
+    }
+}
+
+add foreign key
+
+dotnet new mvc -o lab5_mvc
+code lab5_mvc
+dotnet build
+dotnet run
+
+
+dotnet new mvc -o lab5_mvc
+
+HelloWorldController.cs
+
+using Microsoft.AspNetCore.Mvc;
+
+namespace lab5_mvc.Controllers;
+public class HelloWorldController:Controller{
+    public string Index() {
+        return "Index是預設的, 會採用Controller的名字";
+    }
+    public string Welcome() {
+        return "會接在後面的Welcome";
+    }
+}
+
+
+https://localhost:7081/HelloWorld/Welcome
+https://localhost:7081/HelloWorld
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.AspNetCore.Mvc;
+
+namespace lab5_mvc.Controllers;
+public class HelloWorldController:Controller{
+    public IActionResult Index() {
+        return View();
+    }
+    public string Welcome() {
+        return "會接在後面的Welcome";
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Views目錄下建立HelloWorld目錄
+Index.cshtml
+
+@{
+    ViewData["Title"] = "Systex Corp.";
+}
+
+<H2>INdex</H2>
+<p>可以直接使用這個樣版文件</p>
