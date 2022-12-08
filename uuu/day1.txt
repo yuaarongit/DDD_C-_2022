@@ -1,0 +1,477 @@
+1. install vscode
+2. install .netsdk
+3. install git
+
+https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-6.0.403-windows-x64-installer
+
+cmd
+dotnet --version
+dotnet -h
+dotnet list
+
+https://code.visualstudio.com/docs/?dv=win
+
+https://git-scm.com/
+https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/Git-2.38.1-64-bit.exe
+after install git, restart your vscode
+re-open terminal
+git --version
+
+
+cmd
+code
+
+熱鍵是:
+ctrl+`
+
+
+名稱: REST Client
+識別碼: humao.rest-client
+描述: REST Client for Visual Studio Code
+版本: 0.25.1
+發行者: Huachao Mao
+VS Marketplace 連結: https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+
+名稱: NuGet Reverse Package Search ("Add Package" support)
+識別碼: jesschadwick.nuget-reverse-package-search
+描述: Adds reverse .NET package lookup support like the "Add Package" context menu  item in full Visual Studio
+版本: 0.1.68
+發行者: Jess Chadwick
+VS Marketplace 連結: https://marketplace.visualstudio.com/items?itemName=jesschadwick.nuget-reverse-package-search
+
+名稱: Git Graph
+識別碼: mhutchie.git-graph
+描述: View a Git Graph of your repository, and perform Git actions from the graph.
+版本: 1.30.0
+發行者: mhutchie
+VS Marketplace 連結: https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph
+
+
+https://sqlitebrowser.org/
+https://download.sqlitebrowser.org/DB.Browser.for.SQLite-3.12.2-win64.msi
+
+
+
+
+https://www.figma.com/pricing/
+
+github.com
+
+Desktop
+make a directory DDD_C#
+open a cmd in this directory
+git init .
+
+https://git-scm.com/book/zh-tw/v2/%E9%96%8B%E5%A7%8B-%E5%88%9D%E6%AC%A1%E8%A8%AD%E5%AE%9A-Git
+
+
+git config --global user.name "YOUR_USERNAME"
+
+git config --global user.email "mark@uuu.com"
+
+
+code .
+
+.gitignore
+
+bin/
+obj/
+Migrations/
+
+
+專案建立, 加入.gitignore
+
+git log
+git log --pretty=oneline
+
+
+ctrl+K,O
+
+
+cd C:\Users\Admin\Desktop\DDD_C#
+dotnet new sln -o lab1_unittest
+cd lab1_unittest
+dotnet new classlib -o PrimeService
+dotnet new nunit -o PrimeService.Tests
+
+
+加入兩個專案,
+一個是類別
+另一個是測試
+
+dotnet build
+warning : 找不到可還原的專案!
+
+dotnet sln add .\PrimeService\PrimeService.csproj
+
+dotnet sln add .\PrimeService.Tests\PrimeService.Tests.csproj
+
+dotnet build
+
+ dotnet add .\PrimeService.Tests\PrimeService.Tests.csproj reference .\PrimeService\PrimeService.csproj
+
+將專案加入方案
+將lib專案加入測試專案
+
+ctrl+K,O lab1_unittest
+
+compile setting for lab1
+
+Class1.cs
+
+
+using System;
+namespace Prime.Service;
+public class PrimeService
+{
+    public bool IsPrime(int candidate) {
+        throw new NotImplementedException("not yet implement");
+    }
+
+}
+
+dotnet build
+dotnet test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace PrimeService.Tests;
+
+
+public class Tests
+{
+    [SetUp]
+    public void Setup()
+    {
+    }
+
+    [Test]
+    public void Test1()
+    {
+        Assert.Pass();
+    }
+    [Test]
+    public void Test2() {
+        Assert.Fail("這是意料中應該失敗的");
+    }
+}	
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace PrimeService.Tests;
+
+
+public class Tests
+{
+    [SetUp]
+    public void Setup()
+    {
+        Console.WriteLine("準備環境");
+    }
+    [TearDown]
+    public void StoreData()
+    {
+        Console.WriteLine("清理環境, 儲存資料");
+    }
+
+    [Test]
+    public void Test1()
+    {
+        Console.WriteLine("this is test1");
+        Assert.Pass();
+    }
+    [Test]
+    public void Test2()
+    {
+        Console.WriteLine("this is test2");
+        //Assert.Fail("這是意料中應該失敗的");
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace PrimeService.Tests;
+
+
+public class Tests
+{
+    [OneTimeSetUp]
+    public void init() {
+        //Console.WriteLine("一次性的起動");
+        TestContext.Progress.WriteLine("一次性的起動");
+    }
+    [OneTimeTearDown]
+    public void finalize() {
+        //Console.WriteLine("一次性的清除");
+        TestContext.Progress.WriteLine("最後的清理");
+    }
+    [SetUp]
+    public void Setup()
+    {
+        Console.WriteLine("準備環境");
+    }
+    [TearDown]
+    public void StoreData()
+    {
+        Console.WriteLine("清理環境, 儲存資料");
+    }
+
+    [Test]
+    public void Test1()
+    {
+        Console.WriteLine("this is test1");
+        Assert.Pass();
+    }
+    [Test]
+    public void Test2()
+    {
+        Console.WriteLine("this is test2");
+        //Assert.Fail("這是意料中應該失敗的");
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace PrimeService.Tests;
+
+
+public class Tests
+{
+    [OneTimeSetUp]
+    public void init() {
+        //Console.WriteLine("一次性的起動");
+        TestContext.Progress.WriteLine("一次性的起動");
+    }
+    [OneTimeTearDown]
+    public void finalize() {
+        //Console.WriteLine("一次性的清除");
+        TestContext.Progress.WriteLine("最後的清理");
+    }
+    [SetUp]
+    public void Setup()
+    {
+        Console.WriteLine("準備環境");
+    }
+    [TearDown]
+    public void StoreData()
+    {
+        Console.WriteLine("清理環境, 儲存資料");
+    }
+
+    [Test]
+    public void Test1()
+    {
+        Console.WriteLine("this is test1");
+        Assert.Pass();
+    }
+    [Test]
+    [Ignore("因為還沒寫好")]
+    public void Test2()
+    {
+        Console.WriteLine("this is test2");
+        Assert.Fail("這是意料中應該失敗的");
+    }
+}
+
+
+PrimTest1.cs
+namespace Prime.Service.Tests;
+[TestFixture]
+public class PrimeTest1 {
+    [Test]
+    public void test1() {
+        Console.WriteLine("開始測PrimeService");
+    }
+}
+
+
+https://docs.nunit.org/articles/nunit/writing-tests/attributes/apartment.html
+
+dotnet test --filter PrimeTest1
+dotnet test --filter Prime.Service.Tests.PrimeTest1
+
+dotnet test --filter PrimeService.Tests.Tests
+
+UnitTest1.cs
+
+namespace Prime.Service.Tests;
+
+
+public class Tests
+{
+    [OneTimeSetUp]
+    public void init() {
+        //Console.WriteLine("一次性的起動");
+        TestContext.Progress.WriteLine("一次性的起動");
+    }
+    [OneTimeTearDown]
+    public void finalize() {
+        //Console.WriteLine("一次性的清除");
+        TestContext.Progress.WriteLine("最後的清理");
+    }
+    [SetUp]
+    public void Setup()
+    {
+        Console.WriteLine("準備環境");
+    }
+    [TearDown]
+    public void StoreData()
+    {
+        Console.WriteLine("清理環境, 儲存資料");
+    }
+
+    [Test]
+    public void Test1()
+    {
+        Console.WriteLine("this is test1");
+        Assert.Pass();
+    }
+    [Test]
+    [Ignore("因為還沒寫好")]
+    public void Test2()
+    {
+        Console.WriteLine("this is test2");
+        Assert.Fail("這是意料中應該失敗的");
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace Prime.Service.Tests;
+
+[TestFixture]
+public class PrimeTest1 {
+    [Test]
+    public void test1() {
+        PrimeService s1 = new PrimeService();
+        bool result = s1.IsPrime(1);
+        Console.WriteLine("開始測PrimeService");
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace Prime.Service.Tests;
+
+[TestFixture]
+public class PrimeTest1 {
+    [Test]
+    public void test1() {
+        PrimeService s1 = new PrimeService();
+        bool result = s1.IsPrime(1);
+        Assert.IsFalse(result, "1 should not be a prime");
+        Console.WriteLine("開始測PrimeService");
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using System;
+namespace Prime.Service;
+public class PrimeService
+{
+    public bool IsPrime(int candidate) {
+        if (candidate==1) {
+            return false;
+        }
+        throw new NotImplementedException("not yet implement");
+    }
+
+}
+
+
+a simple sanity check
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using System;
+namespace Prime.Service;
+public class PrimeService
+{
+    public bool IsPrime(int candidate) {
+        if (candidate==1) {
+            return false;
+        }
+        if (candidate==2) {
+            return false;
+        }
+        throw new NotImplementedException("not yet implement");
+    }
+
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace Prime.Service.Tests;
+
+[TestFixture]
+public class PrimeTest1
+{
+    [Test]
+    public void test1()
+    {
+        PrimeService s1 = new PrimeService();
+        bool result = s1.IsPrime(1);
+        Assert.IsFalse(result, "1 should not be a prime");
+    }
+    [Test]
+    public void test2()
+    {
+        PrimeService s1 = new PrimeService();
+        bool result = s1.IsPrime(2);
+        Assert.IsTrue(result, "2 should be a prime");
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using System;
+namespace Prime.Service;
+public class PrimeService
+{
+    public bool IsPrime(int candidate) {
+        if (candidate==1) {
+            return false;
+        }
+        if (candidate==2) {
+            return true;
+        }
+        throw new NotImplementedException("not yet implement");
+    }
+
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace Prime.Service.Tests;
+
+[TestFixture]
+public class PrimeTest1
+{
+
+    private PrimeService primeService = null!;
+    [SetUp]
+    public void prepare() {
+        primeService = new PrimeService();
+    }
+    [Test]
+    public void test1()
+    {
+        
+        bool result = primeService.IsPrime(1);
+        Assert.IsFalse(result, "1 should not be a prime");
+    }
+    [Test]
+    public void test2()
+    {
+        bool result = primeService.IsPrime(2);
+        Assert.IsTrue(result, "2 should be a prime");
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace Prime.Service.Tests;
+
+[TestFixture]
+public class PrimeTest1
+{
+
+    private PrimeService primeService = null!;
+    [OneTimeSetUp]
+    public void prepare() {
+        primeService = new PrimeService();
+    }
+    [Test]
+    public void test1()
+    {
+        
+        bool result = primeService.IsPrime(1);
+        Assert.IsFalse(result, "1 should not be a prime");
+    }
+    [Test]
+    public void test2()
+    {
+        bool result = primeService.IsPrime(2);
+        Assert.IsTrue(result, "2 should be a prime");
+    }
+}
+
+加上另一個測試並且重構

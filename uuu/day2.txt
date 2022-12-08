@@ -1,0 +1,40 @@
+﻿https://github.com/
+
+1. 更新vscode
+2. create a new github project
+
+確認目錄:
+C:\Users\Admin\Desktop\DDD_C#
+git log --pretty=oneline
+
+貼上URL
+
+git remote -v
+
+git push -u origin master
+
+
+cd c:\temp_phw
+
+git clone https://github.com/YOUR_USERNAME/YOUR_PROJECT NAME.git
+
+dotnet new webapi -o lab2_rest_api
+
+dotnet run --project .\lab2_rest_api\
+
+dotnet --version
+dotnet dev-certs https
+dotnet dev-certs https --trust
+https://localhost:7034/WeatherForecast (no https warning)
+
+https://chrome.google.com/webstore/category/extensions?hl=zh-TW
+https://chrome.google.com/webstore/detail/json-viewer/gbmdgpbipfallnflgajpaliibnhdgobh?hl=zh-TW
+
+https://localhost:7034/WeatherForecast
+
+
+創建一個webapi的project
+
+rest_call 目錄
+
+weather_forecast.http
