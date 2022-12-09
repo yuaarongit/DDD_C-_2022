@@ -1,1 +1,9 @@
-GET https://localhost:7183/WeatherForecast
+GET https://localhost:7183/api
+
+###
+
+GET https://localhost:7183/api/add-event
+
+###
+
+GET https://localhost:7183/api/query-event
