@@ -35,14 +35,14 @@ public class EventController : ControllerBase
         // 將上述資料搬到 Application - Service 層
 
         var result = eventService.query(request.lat, request.lng, request.length);
-        List<QueryEventResponse> events = new List<QueryEventResponse>();
+        List<QueryEventResponse> events = new();
         foreach (var r in result)
         {
-            QueryEventResponse res = new QueryEventResponse(r.name, r.coordinator, r.place, r.lat, r.lng, r.fee);
-            events.Add(res);
+            QueryEventResponse response = new QueryEventResponse(r.name, r.coordinator, r.place,
+            r.lat, r.lng, r.fee);
+            events.Add(response);
         }
-
-        return Ok(events.ToArray());
+        return Ok(events);
     }
 
 }
