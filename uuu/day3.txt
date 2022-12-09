@@ -30,3 +30,649 @@ dotnet add .\Together.Infrastructure\ reference .\Together.Application\
 dotnet add .\Together.Application\ reference .\Together.Domain\
 
 dotnet build
+
+
+dotnet run --project Together.Api
+
+Rest\Sample
+sample.http
+
+GET https://localhost:7270/WeatherForecast
+
+delete 4 Class1.cs
+dotnet build
+dotnet run --project Together.Api
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+
+app.MapControllers();
+
+app.Run();
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services.AddControllers();
+}
+
+var app = builder.Build();
+{
+    app.UseHttpsRedirection();
+
+    app.MapControllers();
+
+    app.Run();
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dotnet run --project Together.Api
+
+Together.Api\Controllers
+EventController.cs
+
+
+namespace Together.Api.Controllers;
+using Microsoft.AspNetCore.Mvc;
+[ApiController]
+[Route("api")]
+public class EventController:ControllerBase
+{
+
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.AspNetCore.Mvc;
+
+namespace Together.Api.Controllers;
+
+[ApiController]
+[Route("api")]
+public class EventController:ControllerBase
+{
+    [Route("add-event")]
+    public IActionResult AddEvent() {
+        return Ok();
+    }
+
+}
+
+
+event.http
+
+GET https://localhost:7270/api/add-event
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+event.http
+
+@host = localhost:7270
+GET https://{{host}}/api/add-event
+
+###
+
+GET https://{{host}}/api/query-event
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.AspNetCore.Mvc;
+
+namespace Together.Api.Controllers;
+
+[ApiController]
+[Route("api")]
+public class EventController : ControllerBase
+{
+    [Route("add-event")]
+    public IActionResult AddEvent()
+    {
+        return Ok();
+    }
+    [Route("query-event")]
+    public IActionResult QueryEvent()
+    {
+        return Ok();
+    }
+
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Together.Contract\Controller
+AddEventRequest.cs
+
+namespace Together.Contract.Controller;
+
+public record AddEventRequest(
+    string name,
+    string coordinator,
+    string place,
+    float lat,
+    float lng,
+    int fee
+);
+
+QueryEventRequest.cs
+
+namespace Together.Contract.Controller;
+public record QueryEventRequest(
+    float lat, float lng, float length
+);
+
+dotnet build
+
+
+
+public IActionResult AddEvent(AddEventRequest request)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.AspNetCore.Mvc;
+using Together.Contract.Controller;
+
+namespace Together.Api.Controllers;
+
+[ApiController]
+[Route("api")]
+public class EventController : ControllerBase
+{
+    [Route("add-event")]
+    public IActionResult AddEvent(AddEventRequest request)
+    {
+        return Ok(request);
+    }
+    [Route("query-event")]
+    public IActionResult QueryEvent(QueryEventRequest request)
+    {
+        return Ok(request);
+    }
+
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.AspNetCore.Mvc;
+using Together.Contract.Controller;
+
+namespace Together.Api.Controllers;
+
+[ApiController]
+[Route("api")]
+public class EventController : ControllerBase
+{
+    [HttpPost("add-event")]
+    public IActionResult AddEvent(AddEventRequest request)
+    {
+        return Ok(request);
+    }
+    [HttpPost("query-event")]
+    public IActionResult QueryEvent(QueryEventRequest request)
+    {
+        return Ok(request);
+    }
+
+}
+
+rerun project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+event.http
+
+@host = localhost:7270
+POST https://{{host}}/api/add-event
+
+###
+
+POST https://{{host}}/api/query-event
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+event.http
+
+@host = localhost:7270
+POST https://{{host}}/api/add-event
+Content-Type: application/json
+
+{
+    "name":"作菜",
+    "coordinator":"Mark Ho",
+    "place":"Taipei 101 6F",
+    "lat":20.42,
+    "lng":120.32,
+    "fee":500
+}
+
+###
+
+POST https://{{host}}/api/query-event
+Content-Type: application/json
+
+{
+    "lat":20.42,
+    "lng":130.254,
+    "length":0.5
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AddEventResponse.cs
+
+namespace Together.Contract.Controller;
+public record AddEventResponse(
+    Guid Id,
+    string name,
+    string coordinator,
+    string place,
+    float lat,
+    float lng,
+    int fee
+);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+QueryEventResponse.cs
+
+namespace Together.Contract.Controller;
+public record QueryEventResponse(
+    string name,
+    string coordinator,
+    string place,
+    float lat,
+    float lng,
+    int fee
+);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.AspNetCore.Mvc;
+using Together.Contract.Controller;
+
+namespace Together.Api.Controllers;
+
+[ApiController]
+[Route("api")]
+public class EventController : ControllerBase
+{
+    [HttpPost("add-event")]
+    public IActionResult AddEvent(AddEventRequest request)
+    {
+        AddEventResponse response = new AddEventResponse(
+            Guid.NewGuid(), request.name, request.coordinator,
+            request.place, request.lat, request.lng, request.fee
+        );
+        return Ok(response);
+    }
+    [HttpPost("query-event")]
+    public IActionResult QueryEvent(QueryEventRequest request)
+    {
+        return Ok(request);
+    }
+
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.AspNetCore.Mvc;
+using Together.Contract.Controller;
+
+namespace Together.Api.Controllers;
+
+[ApiController]
+[Route("api")]
+public class EventController : ControllerBase
+{
+    [HttpPost("add-event")]
+    public IActionResult AddEvent(AddEventRequest request)
+    {
+        AddEventResponse response = new AddEventResponse(
+            Guid.NewGuid(), request.name, request.coordinator,
+            request.place, request.lat, request.lng, request.fee
+        );
+        return Ok(response);
+    }
+    [HttpPost("query-event")]
+    public IActionResult QueryEvent(QueryEventRequest request)
+    {
+        QueryEventResponse res = new QueryEventResponse("nane", "mark", "tpe", 20.4f, 121.3f, 1000);
+        QueryEventResponse[] events = new QueryEventResponse[] { res, res, res, res };
+        return Ok(events);
+    }
+
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Together.Application\Servces
+
+EventAddResult.cs
+namespace Together.Application.Services;
+
+public record EventAddResult(
+    Guid Id,
+    string name,
+    string coordinator,
+    string place,
+    float lat,
+    float lng,
+    int fee
+);
+
+EventQueryResult.cs
+namespace Together.Application.Services;
+
+public record EventQueryResult(
+    string name,
+    string coordinator,
+    string place,
+    float lat,
+    float lng,
+    int fee
+);
+
+IEventService.cs
+
+namespace Together.Application.Services;
+
+public interface IEventService
+{
+    EventAddResult add(String name, String coordinator, String place, 
+    float lat, float lng, int fee);
+    EventQueryResult[] query(float lat, float lng, float len);
+}
+
+
+EventService.cs
+
+namespace Together.Application.Services;
+
+public class EventService:IEventService {
+
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+namespace Together.Application.Services;
+
+public class EventService : IEventService
+{
+    public EventAddResult add(string name, string coordinator, string place, float lat, float lng, int fee)
+    {
+        throw new NotImplementedException();
+    }
+
+    public EventQueryResult[] query(float lat, float lng, float len)
+    {
+        throw new NotImplementedException();
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+namespace Together.Application.Services;
+
+public class EventService : IEventService
+{
+    public EventAddResult add(string name, string coordinator, string place, float lat, float lng, int fee)
+    {
+        return new EventAddResult(Guid.NewGuid(), name, coordinator, place, lat, lng, fee);
+    }
+
+    public EventQueryResult[] query(float lat, float lng, float len)
+    {
+        EventQueryResult result = new EventQueryResult("name", "coord", "TPE", 24.5f, 121.3f, 500);
+        EventQueryResult[] results = new EventQueryResult[] { result, result, result };
+        return results;
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+在EventController.cs下:
+
+
+private readonly IEventService eventService;
+
+using Microsoft.AspNetCore.Mvc;
+using Together.Application.Services;
+using Together.Contract.Controller;
+
+namespace Together.Api.Controllers;
+
+[ApiController]
+[Route("api")]
+public class EventController : ControllerBase
+{
+    private readonly IEventService eventService;
+
+    public EventController(IEventService eventService)
+    {
+        this.eventService = eventService;
+    }
+
+    [HttpPost("add-event")]
+    public IActionResult AddEvent(AddEventRequest request)
+    {
+        AddEventResponse response = new AddEventResponse(
+            Guid.NewGuid(), request.name, request.coordinator,
+            request.place, request.lat, request.lng, request.fee
+        );
+        return Ok(response);
+    }
+    [HttpPost("query-event")]
+    public IActionResult QueryEvent(QueryEventRequest request)
+    {
+        QueryEventResponse res = new QueryEventResponse("nane", "mark", "tpe", 20.4f, 121.3f, 1000);
+        QueryEventResponse[] events = new QueryEventResponse[] { res, res, res, res };
+        return Ok(events);
+    }
+
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dotnet run --project Together.Api
+
+
+using Together.Application.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services.AddControllers();
+    builder.Services.AddScoped<IEventService,EventService>();
+}
+
+var app = builder.Build();
+{
+    app.UseHttpsRedirection();
+
+    app.MapControllers();
+
+    app.Run();
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    public IActionResult QueryEvent(QueryEventRequest request)
+    {
+        var result = eventService.query(request.lat, request.lng, request.length);
+        List<QueryEventResponse> events = new();
+        foreach (var r in result)
+        {
+            QueryEventResponse response = new QueryEventResponse(r.name, r.coordinator, r.place,
+            r.lat, r.lng, r.fee);
+            events.Add(response);
+        }
+        return Ok(events);
+    }
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dotnet add .\Together.Application\ package Microsoft.Extensions.DependencyInjection
+
+ctrl+shift+P ==> 查套件 
+
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Together.Application;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddApplication(this IServiceCollection services) {
+        return services;
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Microsoft.Extensions.DependencyInjection;
+using Together.Application.Services;
+
+namespace Together.Application;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddApplication(this IServiceCollection services) {
+        services.AddScoped<IEventService, EventService>();
+        return services;
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Program.cs
+
+using Together.Application;
+using Together.Application.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services.AddControllers();
+    //builder.Services.AddScoped<IEventService,EventService>();
+    builder.Services.AddApplication();
+}
+
+var app = builder.Build();
+{
+    app.UseHttpsRedirection();
+
+    app.MapControllers();
+
+    app.Run();
+}
+
+
+dotnet add .\Together.Infrastructure\ package Microsoft.Extensions.DependencyInjection
+
+
+Together.Infrastructure\DependencyInjection.cs
+
+
+using Microsoft.Extensions.DependencyInjection;
+
+
+namespace Together.Infrastructure;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services) {
+        return services;
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Together.Application;
+using Together.Application.Services;
+using Together.Infrastructure;
+
+var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services.AddControllers();
+    //builder.Services.AddScoped<IEventService,EventService>();
+    builder.Services.AddApplication();
+    builder.Services.AddInfrastructure();
+}
+
+var app = builder.Build();
+{
+    app.UseHttpsRedirection();
+
+    app.MapControllers();
+
+    app.Run();
+}
+
+
+Domain\Entity
+Event.cs
+
+
+namespace Together.Domain.Entity;
+
+public class Event {
+    public Guid Id {get;set;} = Guid.NewGuid();
+    public string? Name {get;set;}=null;
+    public string? Coordinator {get;set;}=null;
+    public string? Place {get;set;}=null;
+    public float Lat{get;set;}
+    public float Lng{get;set;}
+    public float Fee{get;set;}
+}
+
+
+Application\Common\Interfaces
+
+IEventRepository.cs
+
+using Together.Domain.Entity;
+
+namespace Together.Application.Common.Interfaces;
+
+public interface IEventRepository {
+    Event[] GetAll();
+    void AddEvent(Event e);
+}
+
+Together.Infrastructure/Persistence
+
+
+EventMemRepository.cs
+
+using Together.Application.Common.Interfaces;
+using Together.Domain.Entity;
+
+namespace Together.Infrastructure.Persistence;
+
+public class EventMemRepository : IEventRepository
+{
+    private static readonly List<Event> _events = new();
+    public void AddEvent(Event e)
+    {
+        _events.Add(e);
+    }
+
+    public Event[] GetAll()
+    {
+        return _events.ToArray();
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+DependencyInjection.cs
+
+using Microsoft.Extensions.DependencyInjection;
+using Together.Application.Common.Interfaces;
+using Together.Infrastructure.Persistence;
+
+namespace Together.Infrastructure;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services) {
+
+        services.AddScoped<IEventRepository, EventMemRepository>();
+        return services;
+    }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using Together.Application.Common.Interfaces;
+using Together.Domain.Entity;
+
+namespace Together.Application.Services;
+
+public class EventService : IEventService
+{
+    private readonly IEventRepository repository;
+
+    public EventService(IEventRepository repository)
+    {
+        this.repository = repository;
+    }
+
+    public EventAddResult add(string name, string coordinator, string place, float lat, float lng, int fee)
+    {
+        var event1 = new Event{Name = name, Coordinator=coordinator,Place = place, Lat=lat, Lng=lng, Fee=fee};
+        repository.AddEvent(event1);
+        return new EventAddResult(Guid.NewGuid(), name, coordinator, place, lat, lng, fee);
+    }
+
+    public EventQueryResult[] query(float lat, float lng, float len)
+    {
+        EventQueryResult result = new EventQueryResult("name", "coord", "TPE", 24.5f, 121.3f, 500);
+        EventQueryResult[] results = new EventQueryResult[] { result, result, result };
+        return results;
+    }
+}
+
+增加了EventRepository與AddEvent
