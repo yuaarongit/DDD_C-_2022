@@ -42,7 +42,7 @@ public class EventController : ControllerBase
             events.Add(res);
         }
 
-        return Ok(events);
+        return Ok(events.ToArray());
     }
 
 }
