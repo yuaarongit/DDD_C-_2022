@@ -1,6 +1,23 @@
 @host = localhost:7183
-GET https://{{host}}/api/add-event
+POST https://{{host}}/api/add-event
+Content-Type: application/json
+
+{
+"name":"ABC",
+"coordinator":"Aaron",
+"place":"新巴克",
+"lat":20.4,
+"lng":130.5,
+"fee":500
+}
 
 ###
 
-GET https://{{host}}/api/query-event
+POST https://{{host}}/api/query-event
+Content-Type: application/json
+
+{
+    "lat":20.4,
+    "lng":130.5,
+    "length":0.5
+}
