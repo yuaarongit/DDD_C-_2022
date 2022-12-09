@@ -10,7 +10,7 @@ public class EventService : IEventService
     public EventQueryResult[] query(float lat, float lng, float len)
     {
         EventQueryResult result = new EventQueryResult("name", "coord", "TPE", 24.5f, 121.3f, 500);
-        EventQueryResult[] results = new EventQueryResult[] { result, result, result };
+        EventQueryResult[] results = new EventQueryResult[] { result, result, result, result };
         return results;
     }
 }
