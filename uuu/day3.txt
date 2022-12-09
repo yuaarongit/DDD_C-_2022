@@ -1,0 +1,32 @@
+﻿https://survey.uuu.com.tw/
+班別:22208011
+https://survey.uuu.com.tw/survey_keyin.aspx?class_id=22208011&course_id=%a5%f8%b7%7e%a5%5d%afZ
+
+
+DDD_C#
+dotnet new sln -o lab6_together
+
+cd lab6_together
+
+code .
+
+dotnet new webapi -o Together.Api
+dotnet new classlib -o Together.Contract
+dotnet new classlib -o Together.Infrastructure
+dotnet new classlib -o Together.Application
+dotnet new classlib -o Together.Domain
+
+1. dotnet build
+
+2. inside powershell
+dotnet sln add (ls -r **\*.csproj)
+
+dotnet build
+dotnet add .\Together.Api\ reference .\Together.Contract\ .\Together.Application\ .\Together.Infrastructure\
+
+
+dotnet add .\Together.Infrastructure\ reference .\Together.Application\
+
+dotnet add .\Together.Application\ reference .\Together.Domain\
+
+dotnet build
